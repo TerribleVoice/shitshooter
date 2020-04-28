@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace shitshooter
+namespace ShitShooter
 {
     class Program
     {
