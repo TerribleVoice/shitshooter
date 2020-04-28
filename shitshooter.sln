@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30011.22
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "shitshooter", "shitshooter\shitshooter.csproj", "{D9A71F77-869E-476D-A4EF-5E365512FC0D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D9A71F77-869E-476D-A4EF-5E365512FC0D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9A71F77-869E-476D-A4EF-5E365512FC0D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9A71F77-869E-476D-A4EF-5E365512FC0D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9A71F77-869E-476D-A4EF-5E365512FC0D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D894964-B4D2-4963-85AD-80501DCA1632}
+	EndGlobalSection
+EndGlobal
