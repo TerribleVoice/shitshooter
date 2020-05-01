@@ -9,6 +9,12 @@ namespace ShitShooter
         private int bulletSpeed;
         private readonly Game game;
 
+        public Player(Point position, Game game)
+        {
+            this.game = game;
+            Position = position;
+        }
+
         public void MoveLeft()
         {
             if (Position.X > 0)
