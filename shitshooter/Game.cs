@@ -5,23 +5,43 @@ namespace ShitShooter
 {
     class Game
     {
-        public Player Player { get; }
-        public List<Target> Targets { get; }
+        public Player Player { get; private set; }
+        public List<Target> Targets { get; private set; }
+        public List<Bullet> Bullets { get; }
 
-        public Game()
+        public int Width { get; }
+        public int Height { get; }
+
+        public Game(int width, int height, List<Bullet> bullets)
         {
-            Player = new Player();
-            Targets = new List<Target>();
+            Width = width;
+            Height = height;
+            Bullets = bullets;
         }
 
-        public void StartGame()
+        public void StartGame(Player player, List<Target> targetsList)
         {
-            throw new NotImplementedException();
+            Player = player;
+            Targets = targetsList;
+        }
+
+        public bool ShouldGameEnd()
+        {
+            return Targets.Count == 0;
         }
 
         public void EndGame()
         {
+            //здесь будет alert в форму что игра закончилась.
             throw new NotImplementedException();
+        }
+
+        public void HitTarget(Target target, Bullet bullet)
+        {
+            Bullets.Remove(bullet);
+            target.Hp -= bullet.Damage;
+            if (target.Hp <= 0)
+                Targets.Remove(target);
         }
     }
 }

@@ -4,7 +4,7 @@ namespace ShitShooter
 {
     class Target
     {
-        public int Hp;
-        public Point Position;
+        public int Hp { get; set; }
+        public Point Position { get; }
     }
 }

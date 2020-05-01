@@ -4,6 +4,25 @@ namespace ShitShooter
 {
     class Player
     {
-        public Point Position;
+        public Point Position { get; private set; }
+        private int bulletDmg;
+        private int bulletSpeed;
+        private readonly Game game;
+
+        public void MoveLeft()
+        {
+            if (Position.X > 0) 
+                Position = new Point(Position.X-1, Position.Y);
+        }
+        public void MoveRight()
+        {
+            if (Position.X < game.Width - 1) 
+                Position = new Point(Position.X + 1, Position.Y);
+        }
+
+        public void Shoot()
+        {
+            game.Bullets.Add(new Bullet(bulletDmg, bulletSpeed, new Point(Position.X + 1, Position.Y + 1)));
+        }
     }
 }
