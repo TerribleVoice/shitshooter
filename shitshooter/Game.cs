@@ -5,21 +5,21 @@ using System.Drawing;
 
 namespace ShitShooter
 {
-    class Game
+    public class Game
     {
         public Player Player { get; private set; }
         public List<Target> Targets { get; private set; }
-        public List<Bullet> Bullets { get; }
+        public List<Bullet> Bullets { get; private set; }
+        private HashSet<Bullet> bulletsToRemove;
         public ICreature[,] Map;
 
 
         public int Width => Map.GetLength(0);
         public int Height => Map.GetLength(1);
 
-        public Game(int width, int height, List<Bullet> bullets)
+        public Game(int width, int height)
         {
             Map = new ICreature[width, height];
-            Bullets = bullets;
         }
 
         public void StartGame(Player player, List<Target> targetsList)
@@ -37,6 +37,8 @@ namespace ShitShooter
 
             Player = player;
             Targets = targetsList;
+            Bullets = new List<Bullet>();
+            bulletsToRemove = new HashSet<Bullet>();
         }
 
         public bool ShouldGameEnd()
@@ -50,12 +52,59 @@ namespace ShitShooter
             throw new NotImplementedException();
         }
 
+        public void Update()
+        {
+            UpdateBullets();
+            UpdateTargets();
+            UpdateMap();
+            bulletsToRemove.Clear();
+            //UpdatePlayer(); pod voprosom
+        }
+
+        private void UpdateTargets()
+        {
+            var targetsToRemove = new HashSet<Target>();
+
+            foreach (var target in Targets)
+                if (target.Hp <= 0)
+                    targetsToRemove.Add(target);
+
+            foreach (var target in targetsToRemove)
+            {
+                Targets.Remove(target);
+            }
+        }
+        private void UpdateBullets()
+        {
+            foreach (var bullet in Bullets)
+            {
+                bullet.Move();
+                if (!PointBelongsMap(bullet.Position))
+                    bulletsToRemove.Add(bullet);
+            }
+
+            foreach (var bullet in bulletsToRemove)
+                Bullets.Remove(bullet);
+        }
+
+        public void UpdateMap()
+        {
+            var newMap = new ICreature[Width,Height];
+            newMap[Player.Position.X, Player.Position.Y] = Player;
+         
+            foreach (var bullet in Bullets)
+                newMap[bullet.Position.X, bullet.Position.Y] = bullet;
+
+            foreach (var target in Targets)
+                newMap[target.Position.X, target.Position.Y] = target;
+
+            Map = newMap;
+        }
+
         public void HitTarget(Target target, Bullet bullet)
         {
-            Bullets.Remove(bullet);
+            bulletsToRemove.Add(bullet);
             target.Hp -= bullet.Damage;
-            if (target.Hp <= 0)
-                Targets.Remove(target);
         }
 
         private bool PointBelongsMap(Point point)

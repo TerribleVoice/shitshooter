@@ -2,7 +2,7 @@
 
 namespace ShitShooter
 {
-    class Player : ICreature
+    public class Player : ICreature
     {
         public Point Position { get; private set; }
         private int bulletDmg;
@@ -13,22 +13,41 @@ namespace ShitShooter
         {
             this.game = game;
             Position = position;
+            bulletSpeed = 1;
+            bulletDmg = 1;
         }
 
         public void MoveLeft()
         {
-            if (Position.X > 0)
+            game.Map[Position.X, Position.Y] = null;
+
+            if (Position.X > 0) 
                 Position = new Point(Position.X - 1, Position.Y);
+
+            game.Map[Position.X, Position.Y] = this;
         }
         public void MoveRight()
         {
+            game.Map[Position.X, Position.Y] = null;
+
             if (Position.X < game.Width - 1)
                 Position = new Point(Position.X + 1, Position.Y);
+         
+            game.Map[Position.X, Position.Y] = this;
         }
 
         public void Shoot()
         {
-            game.Bullets.Add(new Bullet(bulletDmg, bulletSpeed, new Point(Position.X + 1, Position.Y + 1)));
+            var bullet = new Bullet(bulletDmg, bulletSpeed, new Point(Position.X, Position.Y), game);
+            game.Bullets.Add(bullet);
+
+            //if (game.Map[bullet.Position.X, bullet.Position.Y] is Target)
+            //{
+            //    var target = (Target) game.Map[bullet.Position.X, bullet.Position.Y];
+            //    game.HitTarget(target, bullet);
+            //}
+            //else
+            //    game.Map[bullet.Position.X, bullet.Position.Y] = bullet;
         }
 
         public string GetImageFileName()
