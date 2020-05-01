@@ -1,9 +1,7 @@
-﻿using System.Drawing;
-
-namespace ShitShooter
+﻿namespace ShitShooter
 {
     public interface ICreature
-    {
-        public string GetImageFileName();
+    { 
+        string GetImageFileName();
     }
 }

@@ -24,13 +24,13 @@ namespace ShitShooter
 
         public void StartGame(Player player, List<Target> targetsList)
         {
-            if(!PointBelongsMap(player.Position))
+            if (!PointBelongsMap(player.Position))
                 throw new ArgumentException("Player is outside the map");
             Map[player.Position.X, player.Position.Y] = player;
 
             foreach (var target in targetsList)
             {
-                if(!PointBelongsMap(target.Position))
+                if (!PointBelongsMap(target.Position))
                     throw new ArgumentException($"target ({target.Position.X},{target.Position.Y}) is outside the map");
                 Map[target.Position.X, target.Position.Y] = target;
             }

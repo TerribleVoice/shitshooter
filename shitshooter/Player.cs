@@ -2,7 +2,7 @@
 
 namespace ShitShooter
 {
-    class Player:ICreature
+    class Player : ICreature
     {
         public Point Position { get; private set; }
         private int bulletDmg;
@@ -11,12 +11,12 @@ namespace ShitShooter
 
         public void MoveLeft()
         {
-            if (Position.X > 0) 
-                Position = new Point(Position.X-1, Position.Y);
+            if (Position.X > 0)
+                Position = new Point(Position.X - 1, Position.Y);
         }
         public void MoveRight()
         {
-            if (Position.X < game.Width - 1) 
+            if (Position.X < game.Width - 1)
                 Position = new Point(Position.X + 1, Position.Y);
         }
 

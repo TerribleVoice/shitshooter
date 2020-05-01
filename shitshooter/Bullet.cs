@@ -2,13 +2,13 @@
 
 namespace ShitShooter
 {
-    public class Bullet:ICreature
+    public class Bullet : ICreature
     {
         public int Damage { get; }
         public Point Position { get; private set; }
         public readonly int speed;
         private readonly Game game;
-        public Bullet(int damage,  int speed, Point position)
+        public Bullet(int damage, int speed, Point position)
         {
             Position = position;
             this.speed = speed;
