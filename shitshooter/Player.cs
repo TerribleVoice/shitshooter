@@ -2,7 +2,7 @@
 
 namespace ShitShooter
 {
-    class Player
+    class Player:ICreature
     {
         public Point Position { get; private set; }
         private int bulletDmg;
@@ -23,6 +23,11 @@ namespace ShitShooter
         public void Shoot()
         {
             game.Bullets.Add(new Bullet(bulletDmg, bulletSpeed, new Point(Position.X + 1, Position.Y + 1)));
+        }
+
+        public string GetImageFileName()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

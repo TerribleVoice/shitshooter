@@ -2,7 +2,7 @@
 
 namespace ShitShooter
 {
-    public class Bullet
+    public class Bullet:ICreature
     {
         public int Damage { get; }
         public Point Position { get; private set; }
@@ -18,6 +18,11 @@ namespace ShitShooter
         public void Move()
         {
             Position = new Point(Position.X, Position.Y - speed);
+        }
+
+        public string GetImageFileName()
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
