@@ -51,8 +51,8 @@ namespace ShitShooter
 
         public void Update()
         {
-            if (ShouldGameEnd())
-                EndGame();
+            //if (ShouldGameEnd())
+           //     EndGame();
             UpdateBullets();
             UpdateTargets();
             UpdateMap();
