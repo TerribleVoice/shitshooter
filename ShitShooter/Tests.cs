@@ -10,7 +10,7 @@ namespace ShitShooter
     [TestFixture]
     class Tests
     {
-        private List<Target> defaultTargets = new List<Target>
+        public List<Target> defaultTargets = new List<Target>
         {
             new Target(new Point(1, 0), 1),
             new Target(new Point(2, 0), 1),

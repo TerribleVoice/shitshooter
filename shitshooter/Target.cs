@@ -4,8 +4,6 @@ namespace ShitShooter
 {
     public class Target : ICreature
     {
-       
-
         public int Hp { get; set; }
         public Point Position { get; }
 
