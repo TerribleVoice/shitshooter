@@ -111,5 +111,7 @@ namespace ShitShooter
         {
             return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
         }
+
+        public ICreature this[int x, int y] => Map[x, y];
     }
 }
