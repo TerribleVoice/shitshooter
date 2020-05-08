@@ -16,6 +16,8 @@ namespace ShitShooter
         public Form1(Game game, Player player, List<Target> targets)
         {
             Text = "Стреляющий по говну";
+            MaximizeBox = false;
+            FormBorderStyle = FormBorderStyle.FixedSingle;
             this.game = game;
             game.StartGame(player, targets);
             table = new TableLayoutPanel();
@@ -46,6 +48,13 @@ namespace ShitShooter
 
             KeyDown += Form1_KeyDown;
 
+            game.EndGame += () =>
+            {
+                var result = MessageBox.Show("Игра окончена", "", MessageBoxButtons.OK);
+                if (result == DialogResult.OK)
+                    Close();
+            };
+
             ClientSize = table.Size;
         }
 
@@ -55,6 +64,12 @@ namespace ShitShooter
                 game.Player.MoveLeft();
             if (e.KeyCode == Keys.Right)
                 game.Player.MoveRight();
+        }
+
+        private void Update()
+        {
+            game.Update();
+            DrawMap();
         }
 
         private void DrawMap()

@@ -39,6 +39,7 @@ namespace ShitShooter
             Targets = targetsList;
             Bullets = new List<Bullet>();
             bulletsToRemove = new HashSet<Bullet>();
+            
         }
 
         public bool ShouldGameEnd()
@@ -46,19 +47,16 @@ namespace ShitShooter
             return Targets.Count == 0;
         }
 
-        public void EndGame()
-        {
-            //здесь будет alert в форму что игра закончилась.
-            throw new NotImplementedException();
-        }
+        public event Action EndGame;
 
         public void Update()
         {
+            if (ShouldGameEnd())
+                EndGame();
             UpdateBullets();
             UpdateTargets();
             UpdateMap();
             bulletsToRemove.Clear();
-            //UpdatePlayer(); pod voprosom
         }
 
         private void UpdateTargets()
