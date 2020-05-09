@@ -102,7 +102,7 @@ namespace ShitShooter
 
         private void GetImages()
         {
-            var directory = new DirectoryInfo("imgs");
+            var directory = new DirectoryInfo("./imgs");
 
             foreach (var file in directory.GetFiles())
             {
