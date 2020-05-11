@@ -2,6 +2,7 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 
 namespace ShitShooter
 {
@@ -13,7 +14,7 @@ namespace ShitShooter
         private readonly TableLayoutPanel table;
         private readonly Dictionary<string, string> images;
 
-        public Form1(Game game, Player player, List<Target> targets)
+        public Form1(Game game, Player player, HashSet<Target> targets)
         {
             Text = "Стреляющий по говну";
             MaximizeBox = false;
@@ -35,10 +36,10 @@ namespace ShitShooter
                 table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50f));
             for (var i = 0; i < game.Width; i++)
                 table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50f));
+            DrawMap();
 
             mapUpdateTimer.Interval = 100;
-            mapUpdateTimer.Tick += (sender, args) => game.Update();
-            mapUpdateTimer.Tick += (sender, args) => DrawMap();
+            mapUpdateTimer.Tick += (sender, args) => Update();
             mapUpdateTimer.Start();
 
 
@@ -50,6 +51,8 @@ namespace ShitShooter
 
             game.EndGame += () =>
             {
+                mapUpdateTimer.Stop();
+                shootTimer.Stop();
                 var result = MessageBox.Show("Игра окончена", "", MessageBoxButtons.OK);
                 if (result == DialogResult.OK)
                     Close();
@@ -72,30 +75,64 @@ namespace ShitShooter
             DrawMap();
         }
 
+        private void UpdateMap()
+        {
+          
+            foreach (var bullet in game.Bullets)
+            {
+                var pic = new PictureBox {Image = Image.FromFile(images["bullet.png"]), Name = "bullet"};
+                var prevIndex = bullet.Position.X * game.Height + bullet.Position.Y - 1;
+
+                if (table.Controls[prevIndex].Name == "bullet")
+                {
+                    table.Controls.RemoveAt(prevIndex);
+                    var skyPic = new PictureBox { Name = "sky", Image = Image.FromFile(images["sky.png"]) };
+                    table.Controls.Add(skyPic, bullet.Position.X, bullet.Position.Y-1);
+                }
+
+                var currentIndex = prevIndex + 1;
+                table.Controls.RemoveAt(currentIndex);
+                table.Controls.Add(pic, bullet.Position.X, bullet.Position.Y);
+                table.Controls.Add(pic);
+            }
+        }
+
         private void DrawMap()
         {
             table.Controls.Clear();
-            var controls = new TableLayoutControlCollection(table);
+            var playerPic = new PictureBox {Image = Image.FromFile(images["player.png"]), Name = "player"};
+
+            var usedPoints = new HashSet<Point>();
+
+            table.Controls.Add(playerPic, game.Player.Position.X, game.Player.Position.Y);
+            usedPoints.Add(game.Player.Position);
+
+            foreach (var target in game.Targets)
+            {
+                var targetPic = new PictureBox {Name = "target", Image = Image.FromFile(images["target.png"])};
+                table.Controls.Add(targetPic, target.Position.X, target.Position.Y);
+                usedPoints.Add(target.Position);
+            }
+
+            foreach (var bullet in game.Bullets)
+            {
+                var bulletPic = new PictureBox { Image = Image.FromFile(images["bullet.png"]), Name = "bullet" };
+                table.Controls.Add(bulletPic, bullet.Position.X, bullet.Position.Y);
+                usedPoints.Add(bullet.Position);
+            }
+
             for (var x = 0; x < game.Width; x++)
             {
                 for (var y = 0; y < game.Height; y++)
                 {
-                    var pic = new PictureBox();
-                    switch (game[x,y])
-                    {
-                        case Player _:
-                            pic.Image = Image.FromFile(images["player.png"]);
-                            break;
-                        case Target _:
-                            pic.Image = Image.FromFile(images["target.jpg"]);
-                            break;
-                        case Bullet _:
-                            pic.Image = Image.FromFile(images["bullet.png"]);
-                            break;
-                    }
+                    if (usedPoints.Contains(new Point(x, y))) continue;
 
-                    pic.Dock = DockStyle.Fill;
-                    table.Controls.Add(pic, x, y);
+                    //можно включить, но тогда все будет очень сильно мерцать
+
+                    //var skyPic = new PictureBox { Name = "sky", Image = Image.FromFile(images["sky.png"]) };
+                    //table.Controls.Add(skyPic, x, y);
+
+
                 }
             }
         }

@@ -2,44 +2,43 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
+using System.Linq;
 
 namespace ShitShooter
 {
     public class Game
     {
         public Player Player { get; private set; }
-        public List<Target> Targets { get; private set; }
-        public List<Bullet> Bullets { get; private set; }
+        public HashSet<Target> Targets { get; private set; }
+        public HashSet<Bullet> Bullets { get; private set; }
         private HashSet<Bullet> bulletsToRemove;
-        public ICreature[,] Map;
 
 
-        public int Width => Map.GetLength(0);
-        public int Height => Map.GetLength(1);
+        public int Width { get; }
+        public int Height { get; }
 
         public Game(int width, int height)
         {
-            Map = new ICreature[width, height];
+            Width = width;
+            Height = height;
         }
 
-        public void StartGame(Player player, List<Target> targetsList)
+        public void StartGame(Player player, HashSet<Target> targets)
         {
             if (!PointBelongsMap(player.Position))
                 throw new ArgumentException("Player is outside the map");
-            Map[player.Position.X, player.Position.Y] = player;
 
-            foreach (var target in targetsList)
+            foreach (var target in targets)
             {
                 if (!PointBelongsMap(target.Position))
                     throw new ArgumentException($"target ({target.Position.X},{target.Position.Y}) is outside the map");
-                Map[target.Position.X, target.Position.Y] = target;
             }
 
             Player = player;
-            Targets = targetsList;
-            Bullets = new List<Bullet>();
+            Targets = targets;
+            Bullets = new HashSet<Bullet>();
             bulletsToRemove = new HashSet<Bullet>();
-            
+
         }
 
         public bool ShouldGameEnd()
@@ -51,11 +50,10 @@ namespace ShitShooter
 
         public void Update()
         {
-            //if (ShouldGameEnd())
-           //     EndGame();
+            if (ShouldGameEnd())
+                EndGame?.Invoke();
             UpdateBullets();
             UpdateTargets();
-            UpdateMap();
             bulletsToRemove.Clear();
         }
 
@@ -63,14 +61,11 @@ namespace ShitShooter
         {
             var targetsToRemove = new HashSet<Target>();
 
-            foreach (var target in Targets)
-                if (target.Hp <= 0)
-                    targetsToRemove.Add(target);
+            foreach (var target in Targets.Where(target => target.Hp <= 0))
+                targetsToRemove.Add(target);
 
             foreach (var target in targetsToRemove)
-            {
                 Targets.Remove(target);
-            }
         }
         private void UpdateBullets()
         {
@@ -85,20 +80,6 @@ namespace ShitShooter
                 Bullets.Remove(bullet);
         }
 
-        public void UpdateMap()
-        {
-            var newMap = new ICreature[Width,Height];
-            newMap[Player.Position.X, Player.Position.Y] = Player;
-         
-            foreach (var bullet in Bullets)
-                newMap[bullet.Position.X, bullet.Position.Y] = bullet;
-
-            foreach (var target in Targets)
-                newMap[target.Position.X, target.Position.Y] = target;
-
-            Map = newMap;
-        }
-
         public void HitTarget(Target target, Bullet bullet)
         {
             bulletsToRemove.Add(bullet);
@@ -109,7 +90,5 @@ namespace ShitShooter
         {
             return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
         }
-
-        public ICreature this[int x, int y] => Map[x, y];
     }
 }
