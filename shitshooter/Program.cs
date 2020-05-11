@@ -10,7 +10,7 @@ namespace ShitShooter
 {
     class Program
     {
-        public static List<Target> defaultTargets = new List<Target>
+        public static HashSet<Target> defaultTargets = new HashSet<Target>
         {
             new Target(new Point(1, 0), 1),
             new Target(new Point(2, 0), 1),

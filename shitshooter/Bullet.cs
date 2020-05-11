@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.Linq;
 
 namespace ShitShooter
 {
@@ -23,17 +24,15 @@ namespace ShitShooter
             Position = new Point(Position.X, Position.Y - speed);
             var endY = Position.Y;
 
-            for (int y = startY; y >= Math.Max(0, endY); y--)
+            for (var y = startY; y >= Math.Max(0, endY); y--)
             {
-                if (game.Map[Position.X, y] is Target)
+                if (game.Targets.Any(target => target.Position == new Point(Position.X, y)))
                 {
-                    var target = (Target) game.Map[Position.X, y];
-                    game.HitTarget(target, this);
+                    var targetToHit = game.Targets.First(target => target.Position == new Point(Position.X, y));
+                    game.HitTarget(targetToHit, this);
                     return;
                 }
             }
-
-            
         }
 
         public string GetImageFileName()
