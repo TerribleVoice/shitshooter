@@ -33,10 +33,5 @@ namespace ShitShooter
             var bullet = new Bullet(bulletDmg, bulletSpeed, new Point(Position.X, Position.Y), game);
             game.Bullets.Add(bullet);
         }
-
-        public string GetImageFileName()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

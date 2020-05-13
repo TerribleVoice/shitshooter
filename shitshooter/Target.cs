@@ -12,10 +12,5 @@ namespace ShitShooter
             Position = position;
             Hp = hp;
         }
-
-        public string GetImageFileName()
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

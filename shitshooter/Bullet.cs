@@ -8,7 +8,7 @@ namespace ShitShooter
     {
         public int Damage { get; }
         public Point Position { get; private set; }
-        public readonly int speed;
+        private readonly int speed;
         private readonly Game game;
         public Bullet(int damage, int speed, Point position, Game game)
         {
@@ -33,11 +33,6 @@ namespace ShitShooter
                     return;
                 }
             }
-        }
-
-        public string GetImageFileName()
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

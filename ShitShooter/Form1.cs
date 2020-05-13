@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
@@ -21,30 +22,16 @@ namespace ShitShooter
             FormBorderStyle = FormBorderStyle.FixedSingle;
             this.game = game;
             game.StartGame(player, targets);
-            table = new TableLayoutPanel();
-            mapUpdateTimer = new Timer();
-            shootTimer = new Timer();
             images = new Dictionary<string, string>();
             GetImages();
 
-            table.RowCount = game.Height;
-            table.ColumnCount = game.Width;
-            table.Size = new Size(table.RowCount * 50, table.ColumnCount * 50);
+            table = CreateTable(game.Width, game.Height);
             Controls.Add(table);
 
-            for (var i = 0; i < game.Height; i++)
-                table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50f));
-            for (var i = 0; i < game.Width; i++)
-                table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50f));
-            DrawMap();
-
-            mapUpdateTimer.Interval = 100;
-            mapUpdateTimer.Tick += (sender, args) => Update();
+            mapUpdateTimer = CreateTimer(100, Update);
             mapUpdateTimer.Start();
 
-
-            shootTimer.Interval = 1000;
-            shootTimer.Tick += (sender, args) => game.Player.Shoot();
+            shootTimer = CreateTimer(1000, game.Player.Shoot);
             shootTimer.Start();
 
             KeyDown += Form1_KeyDown;
@@ -73,28 +60,6 @@ namespace ShitShooter
         {
             game.Update();
             DrawMap();
-        }
-
-        private void UpdateMap()
-        {
-          
-            foreach (var bullet in game.Bullets)
-            {
-                var pic = new PictureBox {Image = Image.FromFile(images["bullet.png"]), Name = "bullet"};
-                var prevIndex = bullet.Position.X * game.Height + bullet.Position.Y - 1;
-
-                if (table.Controls[prevIndex].Name == "bullet")
-                {
-                    table.Controls.RemoveAt(prevIndex);
-                    var skyPic = new PictureBox { Name = "sky", Image = Image.FromFile(images["sky.png"]) };
-                    table.Controls.Add(skyPic, bullet.Position.X, bullet.Position.Y-1);
-                }
-
-                var currentIndex = prevIndex + 1;
-                table.Controls.RemoveAt(currentIndex);
-                table.Controls.Add(pic, bullet.Position.X, bullet.Position.Y);
-                table.Controls.Add(pic);
-            }
         }
 
         private void DrawMap()
@@ -146,5 +111,31 @@ namespace ShitShooter
                 images.Add(file.Name, file.FullName);
             }
         }
+
+        private TableLayoutPanel CreateTable(int width, int height)
+        {
+            var table = new TableLayoutPanel
+            {
+                RowCount = game.Height, 
+                ColumnCount = game.Width
+            };
+            table.Size = new Size(table.RowCount * 50, table.ColumnCount * 50);
+            for (var i = 0; i < game.Height; i++)
+                table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50f));
+            for (var i = 0; i < game.Width; i++)
+                table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50f));
+         
+            return table;
+        }
+
+        private Timer CreateTimer(int interval, params Action[] actions)
+        {
+            var timer = new Timer {Interval = interval};
+            foreach (var action in actions)
+                timer.Tick += (sender, args) => action();
+
+            return timer;
+        }
+
     }
 }
