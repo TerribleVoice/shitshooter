@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace ShitShooter
 {
@@ -64,8 +65,7 @@ namespace ShitShooter
             foreach (var target in Targets.Where(target => target.Hp <= 0))
                 targetsToRemove.Add(target);
 
-            foreach (var target in targetsToRemove)
-                Targets.Remove(target);
+            Targets.ExceptWith(targetsToRemove);
         }
         private void UpdateBullets()
         {
@@ -76,8 +76,7 @@ namespace ShitShooter
                     bulletsToRemove.Add(bullet);
             }
 
-            foreach (var bullet in bulletsToRemove)
-                Bullets.Remove(bullet);
+            Bullets.ExceptWith(bulletsToRemove);
         }
 
         public void HitTarget(Target target, Bullet bullet)
@@ -88,7 +87,33 @@ namespace ShitShooter
 
         private bool PointBelongsMap(Point point)
         {
+
             return point.X >= 0 && point.Y >= 0 && point.X < Width && point.Y < Height;
         }
+
+        public HashSet<Target> GenerateRandomTargetsSet(int count, int seed = 0)
+        {
+            if(seed == 0)
+                seed = new Random().Next();
+
+            var rnd = new Random(seed);
+            var set = new HashSet<Target>();
+            while (set.Count<count)
+            {
+                var target = new Target(new Point(rnd.Next(Width-1), rnd.Next(Height-2)), 1);
+                set.Add(target);
+            }
+
+            return set;
+        }
     }
+
+    public static class PointExtensions
+    {
+        public static Point Multiply(this Point point, int value)
+        {
+            return new Point(point.X*value, point.Y*value);
+        }
+    }
+
 }
