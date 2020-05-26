@@ -17,7 +17,8 @@ namespace ShitShooter
 
         public Form1(Game game, Player player, HashSet<Target> targets)
         {
-            Text = "Стреляющий по говну";
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer , true);
+            Text = "Space Battle";
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             this.game = game;
@@ -46,6 +47,8 @@ namespace ShitShooter
             };
 
             ClientSize = table.Size;
+
+            table.BackgroundImage = Resources.sky;
         }
 
         private void Form1_KeyDown(object sender, KeyEventArgs e)
@@ -65,8 +68,8 @@ namespace ShitShooter
         private void DrawMap()
         {
             table.Controls.Clear();
-            var playerPic = new PictureBox {Image = Image.FromFile(images["player.png"]), Name = "player"};
-
+            var playerPic = new PictureBox { Image = Image.FromFile(images["player.png"]), Name = "player" };
+            playerPic.BackColor = Color.Transparent;
             var usedPoints = new HashSet<Point>();
 
             table.Controls.Add(playerPic, game.Player.Position.X, game.Player.Position.Y);
@@ -74,7 +77,8 @@ namespace ShitShooter
 
             foreach (var target in game.Targets)
             {
-                var targetPic = new PictureBox {Name = "target", Image = Image.FromFile(images["target.png"])};
+                var targetPic = new PictureBox { Name = "target", Image = Image.FromFile(images["target.png"]) };
+                targetPic.BackColor = Color.Transparent;
                 table.Controls.Add(targetPic, target.Position.X, target.Position.Y);
                 usedPoints.Add(target.Position);
             }
@@ -82,6 +86,7 @@ namespace ShitShooter
             foreach (var bullet in game.Bullets)
             {
                 var bulletPic = new PictureBox { Image = Image.FromFile(images["bullet.png"]), Name = "bullet" };
+                bulletPic.BackColor = Color.Transparent;
                 table.Controls.Add(bulletPic, bullet.Position.X, bullet.Position.Y);
                 usedPoints.Add(bullet.Position);
             }
@@ -91,12 +96,6 @@ namespace ShitShooter
                 for (var y = 0; y < game.Height; y++)
                 {
                     if (usedPoints.Contains(new Point(x, y))) continue;
-
-                    //можно включить, но тогда все будет очень сильно мерцать
-
-                    //var skyPic = new PictureBox { Name = "sky", Image = Image.FromFile(images["sky.png"]) };
-                    //table.Controls.Add(skyPic, x, y);
-
 
                 }
             }
@@ -116,7 +115,7 @@ namespace ShitShooter
         {
             var table = new TableLayoutPanel
             {
-                RowCount = game.Height, 
+                RowCount = game.Height,
                 ColumnCount = game.Width
             };
             table.Size = new Size(table.RowCount * 50, table.ColumnCount * 50);
@@ -124,13 +123,13 @@ namespace ShitShooter
                 table.RowStyles.Add(new RowStyle(SizeType.Absolute, 50f));
             for (var i = 0; i < game.Width; i++)
                 table.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 50f));
-         
+
             return table;
         }
 
         private Timer CreateTimer(int interval, params Action[] actions)
         {
-            var timer = new Timer {Interval = interval};
+            var timer = new Timer { Interval = interval };
             foreach (var action in actions)
                 timer.Tick += (sender, args) => action();
 
