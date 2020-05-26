@@ -100,7 +100,8 @@ namespace ShitShooter
             var set = new HashSet<Target>();
             while (set.Count<count)
             {
-                var target = new Target(new Point(rnd.Next(Width-1), rnd.Next(Height-2)), 1);
+                //var target = new Target(new Point(rnd.Next(Width-1), rnd.Next(Height-2)), 1);
+                var target = new Target(new Point(1, 1), 1);
                 set.Add(target);
             }
 

@@ -22,5 +22,10 @@ namespace ShitShooter
             return Position == secondTarget.Position;
 
         }
+
+        public override int GetHashCode()
+        {
+            return Position.GetHashCode();
+        }
     }
 }
