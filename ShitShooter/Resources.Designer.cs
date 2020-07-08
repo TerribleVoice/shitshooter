@@ -71,6 +71,15 @@ namespace ShitShooter {
         }
         
         /// <summary>
+        ///   Ищет локализованную строку, похожую на Space Battle.
+        /// </summary>
+        internal static string Game_Name {
+            get {
+                return ResourceManager.GetString("Game Name", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Поиск локализованного ресурса типа System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap player {

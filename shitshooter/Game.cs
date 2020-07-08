@@ -93,15 +93,14 @@ namespace ShitShooter
 
         public HashSet<Target> GenerateRandomTargetsSet(int count, int seed = 0)
         {
-            if(seed == 0)
+            if (seed == 0)
                 seed = new Random().Next();
 
             var rnd = new Random(seed);
             var set = new HashSet<Target>();
-            while (set.Count<count)
+            while (set.Count < count)
             {
-                //var target = new Target(new Point(rnd.Next(Width-1), rnd.Next(Height-2)), 1);
-                var target = new Target(new Point(1, 1), 1);
+                var target = new Target(new Point(rnd.Next(Width - 1), rnd.Next(Height - 2)), 1);
                 set.Add(target);
             }
 
@@ -113,7 +112,7 @@ namespace ShitShooter
     {
         public static Point Multiply(this Point point, int value)
         {
-            return new Point(point.X*value, point.Y*value);
+            return new Point(point.X * value, point.Y * value);
         }
     }
 

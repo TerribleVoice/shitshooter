@@ -28,6 +28,18 @@ namespace ShitShooter
                 Position = new Point(Position.X + 1, Position.Y);
         }
 
+        public void MoveUp()
+        {
+            if (Position.X < game.Width - 1)
+                Position = new Point(Position.X, Position.Y-1);
+        }
+
+        public void MoveDown()
+        {
+            if (Position.Y < game.Height - 1)
+                Position = new Point(Position.X, Position.Y+1);
+        }
+
         public void Shoot()
         {
             var bullet = new Bullet(bulletDmg, bulletSpeed, new Point(Position.X, Position.Y), game);

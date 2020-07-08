@@ -22,16 +22,15 @@ namespace ShitShooter
 
         public Form1(Game game, Player player, HashSet<Target> targets)
         {
-            //InitializeComponent();
-            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer , true);
-            Text = "Space Battle";
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer, true);
+            Text = Resources.Game_Name;
             MaximizeBox = false;
             FormBorderStyle = FormBorderStyle.FixedSingle;
             this.game = game;
             game.StartGame(player, targets);
 
 
-            mapUpdateTimer = CreateTimer(100, DoIteration);
+            mapUpdateTimer = CreateTimer(50, DoIteration);
             mapUpdateTimer.Start();
 
             shootTimer = CreateTimer(1000, game.Player.Shoot);
@@ -49,7 +48,7 @@ namespace ShitShooter
                     Close();
             };
 
-            ClientSize = new Size(game.Width * 50, game.Height *50);
+            ClientSize = new Size(game.Width * 50, game.Height * 50);
             BackgroundImage = skyTexture;
         }
 
@@ -74,6 +73,12 @@ namespace ShitShooter
                 case Keys.Right:
                     game.Player.MoveRight();
                     break;
+                case Keys.Up:
+                    game.Player.MoveUp();
+                    break;
+                case Keys.Down:
+                    game.Player.MoveDown();
+                    break;
             }
         }
 
@@ -81,34 +86,6 @@ namespace ShitShooter
         {
             game.Update();
             Refresh();
-            //DrawMap();
-        }
-
-        private void DrawMap()
-        {
-            table.Controls.Clear();
-            var playerPic = new PictureBox { Image = playerTexture, Name = "player" };
-            playerPic.BackColor = Color.Transparent;
-            var usedPoints = new HashSet<Point>();
-
-            table.Controls.Add(playerPic, game.Player.Position.X, game.Player.Position.Y);
-            usedPoints.Add(game.Player.Position);
-
-            foreach (var target in game.Targets)
-            {
-                var targetPic = new PictureBox { Name = "target", Image = targetTexture };
-                targetPic.BackColor = Color.Transparent;
-                table.Controls.Add(targetPic, target.Position.X, target.Position.Y);
-                usedPoints.Add(target.Position);
-            }
-
-            foreach (var bullet in game.Bullets)
-            {
-                var bulletPic = new PictureBox { Image = bulletTexture, Name = "bullet" };
-                bulletPic.BackColor = Color.Transparent;
-                table.Controls.Add(bulletPic, bullet.Position.X, bullet.Position.Y);
-                usedPoints.Add(bullet.Position);
-            }
         }
 
         private Timer CreateTimer(int interval, params Action[] actions)

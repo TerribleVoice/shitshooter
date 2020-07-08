@@ -19,10 +19,10 @@ namespace ShitShooter
 
         static void Main(string[] args)
         {
-            var Game = new Game(5,5);
+            var Game = new Game(10,10);
             var Player = new Player(new Point(2,4), Game);
             var targets = Game.GenerateRandomTargetsSet(4);
-            Application.Run(new Form1(Game, Player, targets));
+            Application.Run(new Menu());
         }
     }
 }
